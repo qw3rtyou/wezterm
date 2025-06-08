@@ -25,6 +25,7 @@ local M = {}
 
 local ICON_SEPARATOR = nf.oct_dash
 local ICON_DATE = nf.fa_calendar
+local ICON_USER = nf.fa_user
 
 ---@type string[]
 local discharging_icons = {
@@ -57,6 +58,7 @@ local charging_icons = {
 -- stylua: ignore
 local colors = {
    date      = { fg = '#fab387', bg = 'rgba(0, 0, 0, 0.4)' },
+   user      = { fg = '#f38ba8', bg = 'rgba(0, 0, 0, 0.4)' },
    battery   = { fg = '#f9e2af', bg = 'rgba(0, 0, 0, 0.4)' },
    separator = { fg = '#74c7ec', bg = 'rgba(0, 0, 0, 0.4)' }
 }
@@ -66,7 +68,10 @@ local cells = Cells:new()
 cells
    :add_segment('date_icon', ICON_DATE .. '  ', colors.date, attr(attr.intensity('Bold')))
    :add_segment('date_text', '', colors.date, attr(attr.intensity('Bold')))
-   :add_segment('separator', ' ' .. ICON_SEPARATOR .. '  ', colors.separator)
+   :add_segment('separator1', ' ' .. ICON_SEPARATOR .. '  ', colors.separator)
+   :add_segment('user_icon', ICON_USER .. '  ', colors.user, attr(attr.intensity('Bold')))
+   :add_segment('user_text', '', colors.user, attr(attr.intensity('Bold')))
+   :add_segment('separator2', ' ' .. ICON_SEPARATOR .. '  ', colors.separator)
    :add_segment('battery_icon', '', colors.battery)
    :add_segment('battery_text', '', colors.battery, attr(attr.intensity('Bold')))
 
@@ -101,15 +106,19 @@ M.setup = function(opts)
 
    wezterm.on('update-right-status', function(window, _pane)
       local battery_text, battery_icon = battery_info()
+      
+      -- 안전한 사용자명 가져오기 (환경변수만 사용)
+      local username = os.getenv('USERNAME') or os.getenv('USER') or 'User'
 
       cells
          :update_segment_text('date_text', wezterm.strftime(valid_opts.date_format))
+         :update_segment_text('user_text', username)
          :update_segment_text('battery_icon', battery_icon)
          :update_segment_text('battery_text', battery_text)
 
       window:set_right_status(
          wezterm.format(
-            cells:render({ 'date_icon', 'date_text', 'separator', 'battery_icon', 'battery_text' })
+            cells:render({ 'date_icon', 'date_text', 'separator1', 'user_icon', 'user_text', 'separator2', 'battery_icon', 'battery_text' })
          )
       )
    end)
