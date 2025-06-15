@@ -64,6 +64,7 @@ local keys = {
    
    -- SSH 도메인 전용 단축키
    { key = 'k',          mods = mod.SUPER_REV, action = act.SpawnTab({ DomainName = 'kali-local' }) },
+   { key = 'v',          mods = mod.SUPER_REV, action = act.SpawnTab({ DomainName = 'kali-vm' }) },
    { key = 'w',          mods = mod.SUPER_REV, action = act.CloseCurrentTab({ confirm = false }) },
 
    -- tabs: navigation

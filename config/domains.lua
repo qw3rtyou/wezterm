@@ -12,6 +12,14 @@ return {
          assume_shell = 'Posix'
       },
       {
+         name = 'kali-vm',
+         remote_address = '192.168.40.128',
+         username = 'kali',
+         default_prog = { 'zsh', '-l' },
+         assume_shell = 'Posix',
+         multiplexing = 'None',
+      },
+      {
          name = 'kali-local',
          remote_address = '211.250.216.249',
          username = 'foo1',
