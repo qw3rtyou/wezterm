@@ -141,12 +141,18 @@ local function create_title(process_name, base_title, max_width, inset)
       inset = inset - 2
    end
 
-   if title:len() > max_width - inset then
-      local diff = title:len() - max_width + inset
-      title = title:sub(1, title:len() - diff)
+   -- 폭 계산은 바이트가 아니라 표시 칸 수로 해야 한다.
+   -- 한글 등은 1자가 3바이트이면서 화면상 2칸을 차지하므로 string.len/sub 로 다루면
+   -- (a) 문자 중간이 잘려 UTF-8 이 깨지고 — format-tab-title 이 실패하며
+   -- (b) 폭을 과대 계산해 필요 이상으로 잘린다. 예: '하네스 스킬' = 16바이트 / 11칸.
+   -- wezterm 의 폭 인식 헬퍼가 두 문제를 모두 해결한다.
+   local avail = math.max(0, max_width - inset)
+   local width = wezterm.column_width(title)
+
+   if width > avail then
+      title = wezterm.truncate_right(title, avail)
    else
-      local padding = max_width - title:len() - inset
-      title = title .. string.rep(' ', padding)
+      title = title .. string.rep(' ', avail - width)
    end
 
    return title
