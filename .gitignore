@@ -3,3 +3,7 @@
 /lua_modules
 /.luarocks
 .DS_Store
+
+# harness 중간 산출물
+_workspace/
+_workspace_*/
