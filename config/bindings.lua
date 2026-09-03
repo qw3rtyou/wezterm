@@ -25,11 +25,11 @@ local keys = {
       mods = 'NONE',
       action = act.ShowLauncherArgs({ flags = 'FUZZY|WORKSPACES' }),
    },
-   { key = 'F11', mods = 'NONE',    action = act.ToggleFullScreen },
-   { key = 'F12', mods = 'NONE',    action = act.ShowDebugOverlay },
-   { key = 'f',   mods = mod.SUPER, action = act.Search({ CaseInSensitiveString = '' }) },
+   { key = 'F11',    mods = 'NONE',    action = act.ToggleFullScreen },
+   { key = 'F12',    mods = 'NONE',    action = act.ShowDebugOverlay },
+   { key = 'phys:F', mods = mod.SUPER, action = act.Search({ CaseInSensitiveString = '' }) },
    {
-      key = 'u',
+      key = 'phys:U',
       mods = mod.SUPER_REV,
       action = wezterm.action.QuickSelectArgs({
          label = 'open url',
@@ -49,40 +49,40 @@ local keys = {
    },
 
    -- cursor movement --
-   { key = 'LeftArrow',  mods = mod.SUPER,     action = act.SendString '\u{1b}OH' },
-   { key = 'RightArrow', mods = mod.SUPER,     action = act.SendString '\u{1b}OF' },
-   { key = 'Backspace',  mods = mod.SUPER,     action = act.SendString '\u{15}' },
+   { key = 'LeftArrow',  mods = mod.SUPER, action = act.SendString '\u{1b}OH' },
+   { key = 'RightArrow', mods = mod.SUPER, action = act.SendString '\u{1b}OF' },
+   { key = 'Backspace',  mods = mod.SUPER, action = act.SendString '\u{15}' },
 
    -- copy/paste --
-   { key = 'c',          mods = 'CTRL|SHIFT',  action = act.CopyTo('Clipboard') },
-   { key = 'v',          mods = 'CTRL|SHIFT',  action = act.PasteFrom('Clipboard') },
+   { key = 'phys:C', mods = 'CTRL|SHIFT', action = act.CopyTo('Clipboard') },
+   { key = 'phys:V', mods = 'CTRL|SHIFT', action = act.PasteFrom('Clipboard') },
 
    -- tabs --
    -- tabs: spawn+close
-   { key = 't',          mods = mod.SUPER,     action = act.SpawnTab('DefaultDomain') },
-   { key = 't',          mods = mod.SUPER_REV, action = act.SpawnTab({ DomainName = 'WSL:Ubuntu-22.04' }) },
+   { key = 'phys:T', mods = mod.SUPER,     action = act.SpawnTab('DefaultDomain') },
+   { key = 'phys:T', mods = mod.SUPER_REV, action = act.SpawnTab({ DomainName = 'WSL:Ubuntu' }) },
    
    -- SSH 도메인 전용 단축키
-   { key = 'k',          mods = mod.SUPER_REV, action = act.SpawnTab({ DomainName = 'kali-local' }) },
-   { key = 'v',          mods = mod.SUPER_REV, action = act.SpawnTab({ DomainName = 'kali-vm' }) },
-   { key = 'w',          mods = mod.SUPER_REV, action = act.CloseCurrentTab({ confirm = false }) },
+   { key = 'phys:K', mods = mod.SUPER_REV, action = act.SpawnTab({ DomainName = 'kali-local' }) },
+   { key = 'phys:V', mods = mod.SUPER_REV, action = act.SpawnTab({ DomainName = 'kali-vm' }) },
+   { key = 'phys:W', mods = mod.SUPER_REV, action = act.CloseCurrentTab({ confirm = false }) },
 
    -- tabs: navigation
-   { key = '[',          mods = mod.SUPER,     action = act.ActivateTabRelative(-1) },
-   { key = ']',          mods = mod.SUPER,     action = act.ActivateTabRelative(1) },
-   { key = '[',          mods = mod.SUPER_REV, action = act.MoveTabRelative(-1) },
-   { key = ']',          mods = mod.SUPER_REV, action = act.MoveTabRelative(1) },
+   { key = '[', mods = mod.SUPER,     action = act.ActivateTabRelative(-1) },
+   { key = ']', mods = mod.SUPER,     action = act.ActivateTabRelative(1) },
+   { key = '[', mods = mod.SUPER_REV, action = act.MoveTabRelative(-1) },
+   { key = ']', mods = mod.SUPER_REV, action = act.MoveTabRelative(1) },
 
    -- tab: title
-   { key = '0',          mods = mod.SUPER,     action = act.EmitEvent('tabs.manual-update-tab-title') },
-   { key = '0',          mods = mod.SUPER_REV, action = act.EmitEvent('tabs.reset-tab-title') },
+   { key = '0', mods = mod.SUPER,     action = act.EmitEvent('tabs.manual-update-tab-title') },
+   { key = '0', mods = mod.SUPER_REV, action = act.EmitEvent('tabs.reset-tab-title') },
 
    -- tab: hide tab-bar
    { key = '9',          mods = mod.SUPER,     action = act.EmitEvent('tabs.toggle-tab-bar'), },
 
    -- window --
    -- window: spawn windows
-   { key = 'n',          mods = mod.SUPER,     action = act.SpawnWindow },
+   { key = 'phys:N',          mods = mod.SUPER,     action = act.SpawnWindow },
 
    -- window: zoom window
    {
@@ -152,7 +152,7 @@ local keys = {
       }),
    },
    {
-      key = 'b',
+      key = 'phys:B',
       mods = mod.SUPER,
       action = wezterm.action_callback(function(window, _pane)
          backdrops:toggle_focus(window)
@@ -173,30 +173,30 @@ local keys = {
    },
 
    -- panes: zoom+close pane
-   { key = 'Enter', mods = mod.SUPER,     action = act.TogglePaneZoomState },
-   { key = 'w',     mods = mod.SUPER,     action = act.CloseCurrentPane({ confirm = false }) },
+   { key = 'Enter',  mods = mod.SUPER, action = act.TogglePaneZoomState },
+   { key = 'phys:W', mods = mod.SUPER, action = act.CloseCurrentPane({ confirm = false }) },
 
    -- panes: navigation
-   { key = 'k',     mods = mod.SUPER_REV, action = act.ActivatePaneDirection('Up') },
-   { key = 'j',     mods = mod.SUPER_REV, action = act.ActivatePaneDirection('Down') },
-   { key = 'h',     mods = mod.SUPER_REV, action = act.ActivatePaneDirection('Left') },
-   { key = 'l',     mods = mod.SUPER_REV, action = act.ActivatePaneDirection('Right') },
+   { key = 'phys:K', mods = mod.SUPER_REV, action = act.ActivatePaneDirection('Up') },
+   { key = 'phys:J', mods = mod.SUPER_REV, action = act.ActivatePaneDirection('Down') },
+   { key = 'phys:H', mods = mod.SUPER_REV, action = act.ActivatePaneDirection('Left') },
+   { key = 'phys:L', mods = mod.SUPER_REV, action = act.ActivatePaneDirection('Right') },
    {
-      key = 'p',
+      key = 'phys:P',
       mods = mod.SUPER_REV,
       action = act.PaneSelect({ alphabet = '1234567890', mode = 'SwapWithActiveKeepFocus' }),
    },
 
    -- panes: scroll pane
-   { key = 'u',        mods = mod.SUPER, action = act.ScrollByLine(-5) },
-   { key = 'd',        mods = mod.SUPER, action = act.ScrollByLine(5) },
+   { key = 'phys:U',   mods = mod.SUPER, action = act.ScrollByLine(-5) },
+   { key = 'phys:D',   mods = mod.SUPER, action = act.ScrollByLine(5) },
    { key = 'PageUp',   mods = 'NONE',    action = act.ScrollByPage(-0.75) },
    { key = 'PageDown', mods = 'NONE',    action = act.ScrollByPage(0.75) },
 
    -- key-tables --
    -- resizes fonts
    {
-      key = 'f',
+      key = 'phys:F',
       mods = 'LEADER',
       action = act.ActivateKeyTable({
          name = 'resize_font',
@@ -206,7 +206,7 @@ local keys = {
    },
    -- resize panes
    {
-      key = 'p',
+      key = 'phys:P',
       mods = 'LEADER',
       action = act.ActivateKeyTable({
          name = 'resize_pane',
@@ -219,19 +219,19 @@ local keys = {
 -- stylua: ignore
 local key_tables = {
    resize_font = {
-      { key = 'k',      action = act.IncreaseFontSize },
-      { key = 'j',      action = act.DecreaseFontSize },
-      { key = 'r',      action = act.ResetFontSize },
+      { key = 'phys:K', action = act.IncreaseFontSize },
+      { key = 'phys:J', action = act.DecreaseFontSize },
+      { key = 'phys:R', action = act.ResetFontSize },
       { key = 'Escape', action = 'PopKeyTable' },
-      { key = 'q',      action = 'PopKeyTable' },
+      { key = 'phys:Q', action = 'PopKeyTable' },
    },
    resize_pane = {
-      { key = 'k',      action = act.AdjustPaneSize({ 'Up', 1 }) },
-      { key = 'j',      action = act.AdjustPaneSize({ 'Down', 1 }) },
-      { key = 'h',      action = act.AdjustPaneSize({ 'Left', 1 }) },
-      { key = 'l',      action = act.AdjustPaneSize({ 'Right', 1 }) },
+      { key = 'phys:K', action = act.AdjustPaneSize({ 'Up', 1 }) },
+      { key = 'phys:J', action = act.AdjustPaneSize({ 'Down', 1 }) },
+      { key = 'phys:H', action = act.AdjustPaneSize({ 'Left', 1 }) },
+      { key = 'phys:L', action = act.AdjustPaneSize({ 'Right', 1 }) },
       { key = 'Escape', action = 'PopKeyTable' },
-      { key = 'q',      action = 'PopKeyTable' },
+      { key = 'phys:Q', action = 'PopKeyTable' },
    },
 }
 
