@@ -22,7 +22,7 @@ bash .claude/skills/wezterm-config-verify/scripts/verify.sh
 | 검사 | 방법 | CI 대응 |
 |------|------|---------|
 | 포맷 | `stylua --line-endings Windows -g '!**/init.lua' -g '!**/opts-validator.lua' --check ...` | `.github/workflows/lint.yml` (인자 다름 — 아래 참조) |
-| 린트 | `luacheck wezterm.lua colors/* config/* events/* utils/*` | 같은 파일 |
+| 린트 | `luacheck ...` — 없으면 CI와 같은 도커 이미지로 실행 | 같은 파일 (동일 이미지) |
 | 로드 | `wezterm ls-fonts` 후 stderr의 `ERROR` 검사 | CI에 없음 — 로컬 전용 |
 | 중복키 | `scripts/check-duplicate-keys.sh` 정적 검사 | CI에 없음 — 로컬 전용 |
 | 참조 | `scripts/check-references.sh` — WSL 배포판·실행 파일 실재 확인 | CI에 없음 — 로컬 전용 |
@@ -138,8 +138,11 @@ wezterm 은 설정이 **없는 WSL 배포판이나 실행 파일**을 가리켜�
 stylua는 설치돼 있다(winget, 2.5.2). winget이 PATH에 추가하지만 이미 열려 있던 셸에는
 반영되지 않으므로, 스크립트가 PATH에서 못 찾으면 winget 패키지 디렉토리를 직접 뒤진다.
 
-luacheck는 설치돼 있지 않다 — 루아 런타임과 luarocks 체인이 필요해 비용 대비 이득이 작다고
-판단했다. 필요하면 아래로 설치하고, 설치되면 스크립트가 자동으로 검사에 포함한다.
+luacheck는 로컬에 설치하지 않고 **CI가 쓰는 도커 이미지**(`ghcr.io/lunarmodules/luacheck:v1.2.0`)로
+돌린다. Lua 툴체인을 깔지 않고도 CI와 완전히 같은 결과를 얻는다. 도커가 없을 때만 SKIP 된다.
+
+> 이 검사를 SKIP 으로 넘기고 푸시했다가 CI 가 W211(미사용 변수)·W611(공백만 있는 줄)로
+> 실패한 적이 있다. **SKIP 은 통과가 아니다** — 이 문서가 처음부터 경고하던 바로 그 함정이다.
 
 ```bash
 winget install DEVCOM.LuaJIT            # luacheck 실행용 런타임

@@ -37,3 +37,5 @@
 | 2026-09-03 | launch_menu 의 Nushell 항목 제거 (Windows·mac 각 1곳) | config/launch.lua | `nu` 미설치라 실행 시 실패하는 항목이었고 사용자가 쓰지 않음 |
 | 2026-09-03 | launch_menu 의 Git Bash 항목 복구 | config/launch.lua | 포크 원저자 경로(C:\Users\kevin\scoop\...)로 주석 처리돼 있었음. 이 머신의 실제 경로 C:\Program Files\Git\bin\bash.exe 로 고쳐 활성화(-l 로그인 셸) |
 | 2026-09-03 | 참조 검사가 Windows 절대경로도 판정하도록 개선 | check-references.sh | Lua 문자열의 이스케이프된 백슬래시를 되돌려 파일 존재로 확인. 잘못된 경로 주입 테스트로 검출 확인 |
+| 2026-09-03 | CI 실패 수정: 미사용 변수·공백 줄 | config/domains.lua, config/bindings.lua | W211 미사용 wezterm require(identityfile 제거하며 생김), W611 공백만 있는 줄(기존부터 있었음) |
+| 2026-09-03 | luacheck 를 CI 동일 도커 이미지로 실행하도록 변경 | verify.sh, 검증 스킬 | 로컬 미설치라 SKIP 하고 푸시했다가 CI 에서 실패. Lua 툴체인 없이 CI 와 동일 결과를 얻는다 |

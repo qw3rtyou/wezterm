@@ -61,7 +61,7 @@ local keys = {
    -- tabs: spawn+close
    { key = 'phys:T', mods = mod.SUPER,     action = act.SpawnTab('DefaultDomain') },
    { key = 'phys:T', mods = mod.SUPER_REV, action = act.SpawnTab({ DomainName = 'WSL:Ubuntu' }) },
-   
+
    -- SSH 도메인 전용 단축키
    { key = 'phys:K', mods = mod.SUPER_REV, action = act.SpawnTab({ DomainName = 'kali-local' }) },
    { key = 'phys:V', mods = mod.SUPER_REV, action = act.SpawnTab({ DomainName = 'kali-vm' }) },

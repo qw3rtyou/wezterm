@@ -63,17 +63,30 @@ else
    report "stylua" "SKIP" "미설치 — winget install JohnnyMorganz.StyLua"
 fi
 
-# 2. 린트 — CI와 동일한 대상
+# 2. 린트 — CI와 동일한 대상. luacheck 가 PATH 에 없으면 CI 가 쓰는 바로 그 도커
+#    이미지로 대신 돌린다. 로컬에 Lua 툴체인을 깔지 않고도 CI 와 동일한 결과를 얻는다.
+#    (이 검사를 SKIP 으로 넘겼다가 CI 에서 W211/W611 로 실패한 적이 있다 — 2026-09-03)
+LUACHECK_ARGS="wezterm.lua colors/* config/* events/* utils/*"
+LUACHECK_IMAGE="ghcr.io/lunarmodules/luacheck:v1.2.0"
+
 if command -v luacheck >/dev/null 2>&1; then
-   if out=$(luacheck wezterm.lua colors/* config/* events/* utils/* 2>&1); then
-      report "luacheck" "통과" "$(echo "$out" | tail -1 | cut -c1-50)"
-   else
-      report "luacheck" "실패" "$(echo "$out" | tail -1 | cut -c1-50)"
-      echo "$out" | sed 's/^/    /'
-      status=1
-   fi
+   lint_out=$(luacheck $LUACHECK_ARGS 2>&1); lint_rc=$?; lint_how="로컬"
+elif command -v docker >/dev/null 2>&1 && docker info >/dev/null 2>&1; then
+   lint_out=$(MSYS_NO_PATHCONV=1 docker run --rm -v "$(pwd -W 2>/dev/null || pwd):/w" \
+      --workdir /w --entrypoint sh "$LUACHECK_IMAGE" \
+      -c "luacheck $LUACHECK_ARGS" 2>&1); lint_rc=$?; lint_how="docker(CI 동일 이미지)"
 else
-   report "luacheck" "SKIP" "미설치 — luarocks install luacheck"
+   lint_rc=-1
+fi
+
+if [ "$lint_rc" -eq -1 ]; then
+   report "luacheck" "SKIP" "미설치 + docker 없음"
+elif [ "$lint_rc" -eq 0 ]; then
+   report "luacheck" "통과" "$lint_how — $(echo "$lint_out" | tail -1 | sed 's/\x1b\[[0-9;]*m//g')"
+else
+   report "luacheck" "실패" "$lint_how — $(echo "$lint_out" | tail -1 | sed 's/\x1b\[[0-9;]*m//g')"
+   echo "$lint_out" | sed 's/\x1b\[[0-9;]*m//g' | grep -E "^\s+\S+:[0-9]+:[0-9]+:" | sed 's/^/    /'
+   status=1
 fi
 
 # 3. 실제 로드 — wezterm 은 설정 오류에도 종료 코드 0 을 반환하므로 stderr 를 봐야 한다.
