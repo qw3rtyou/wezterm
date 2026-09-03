@@ -106,7 +106,7 @@ M.setup = function(opts)
 
    wezterm.on('update-right-status', function(window, _pane)
       local battery_text, battery_icon = battery_info()
-      
+
       -- 안전한 사용자명 가져오기 (환경변수만 사용)
       local username = os.getenv('USERNAME') or os.getenv('USER') or 'User'
 
@@ -116,11 +116,18 @@ M.setup = function(opts)
          :update_segment_text('battery_icon', battery_icon)
          :update_segment_text('battery_text', battery_text)
 
-      window:set_right_status(
-         wezterm.format(
-            cells:render({ 'date_icon', 'date_text', 'separator1', 'user_icon', 'user_text', 'separator2', 'battery_icon', 'battery_text' })
-         )
-      )
+      -- 배터리가 없는 기기(데스크톱)에서는 wezterm.battery_info() 가 빈 목록이라
+      -- battery_text 가 '' 가 된다. 그때 separator2 까지 그리면 상태바 끝에 구분자만
+      -- 덩그러니 남으므로, 배터리 관련 세그먼트를 통째로 뺀다.
+      local segments = { 'date_icon', 'date_text', 'separator1', 'user_icon', 'user_text' }
+
+      if battery_text ~= '' then
+         segments[#segments + 1] = 'separator2'
+         segments[#segments + 1] = 'battery_icon'
+         segments[#segments + 1] = 'battery_text'
+      end
+
+      window:set_right_status(wezterm.format(cells:render(segments)))
    end)
 end
 
