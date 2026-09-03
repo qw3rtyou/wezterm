@@ -39,3 +39,4 @@
 | 2026-09-03 | 참조 검사가 Windows 절대경로도 판정하도록 개선 | check-references.sh | Lua 문자열의 이스케이프된 백슬래시를 되돌려 파일 존재로 확인. 잘못된 경로 주입 테스트로 검출 확인 |
 | 2026-09-03 | CI 실패 수정: 미사용 변수·공백 줄 | config/domains.lua, config/bindings.lua | W211 미사용 wezterm require(identityfile 제거하며 생김), W611 공백만 있는 줄(기존부터 있었음) |
 | 2026-09-03 | luacheck 를 CI 동일 도커 이미지로 실행하도록 변경 | verify.sh, 검증 스킬 | 로컬 미설치라 SKIP 하고 푸시했다가 CI 에서 실패. Lua 툴체인 없이 CI 와 동일 결과를 얻는다 |
+| 2026-09-03 | kali-local 을 공인 IP → LAN 직결(172.30.1.76)로 변경 | config/domains.lua | 1시간마다 끊기던 원인. PC(172.30.1.41)와 서버(172.30.1.76)가 같은 LAN 인데 공인 IP 로 붙어 헤어핀 NAT 경로를 탔고, 공유기 NAT 세션이 정확히 1시간에 끊겼다(last: 14:57:48-15:58:05 = 01:00, 서버가 본 peer 가 공유기 주소 172.30.1.254). 서버측은 ClientAliveCountMax 10000, fail2ban 비활성, TMOUT 없음으로 무관함을 확인 |
